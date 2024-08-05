@@ -1,15 +1,14 @@
 package app;
 
-import app.controller.ControllerInterface;
-import app.controller.SellerController;
+import app.controller.LoginController;
 
 public class App {
 
-	public static void main(String[] args) {
-		ControllerInterface controller = new SellerController();
+	public static void main(String[] args) throws Exception {
+		LoginController veterinarianController = new LoginController();
 		try {
-		controller.session();}
-		catch(Exception e) {
+			veterinarianController.session();
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
