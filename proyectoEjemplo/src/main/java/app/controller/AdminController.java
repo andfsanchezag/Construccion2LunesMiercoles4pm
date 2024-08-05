@@ -4,15 +4,19 @@ import app.controller.validator.PersonValidator;
 import app.controller.validator.UserValidator;
 import app.dto.PersonDto;
 import app.dto.UserDto;
+import app.service.Service;
+import app.service.interfaces.AdminService;
 
 public class AdminController implements ControllerInterface {
 	private PersonValidator personValidator;
 	private UserValidator userValidator;
+	private AdminService service;
 	private static final String MENU = "ingrese la opcion que desea \n 1.para crear veterinario \n 2. para crear vendedor \n 3. para cerrar sesion \n";
 
 	public AdminController() {
 		this.personValidator = new PersonValidator();
 		this.userValidator = new UserValidator();
+		this.service = new Service();
 	}
 
 	@Override
@@ -26,6 +30,7 @@ public class AdminController implements ControllerInterface {
 
 	private boolean menu() {
 		try {
+			System.out.println("bienvenido " + Service.user.getUserName());
 			System.out.print(MENU);
 			String option = Utils.getReader().nextLine();
 			return options(option);
