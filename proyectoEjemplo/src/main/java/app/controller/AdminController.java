@@ -87,6 +87,7 @@ public class AdminController implements ControllerInterface {
 		userDto.setUserName(userName);
 		userDto.setPassword(password);
 		userDto.setRole("veterinarian");
+		this.service.createVeterinarian(userDto);
 		System.out.println("se ha creado el usuario exitosamente");
 	}
 
@@ -113,6 +114,7 @@ public class AdminController implements ControllerInterface {
 		userDto.setUserName(userName);
 		userDto.setPassword(password);
 		userDto.setRole("seller");
+		this.service.createSeller(userDto);
 		System.out.println("se ha creado el usuario exitosamente");
 	}
 

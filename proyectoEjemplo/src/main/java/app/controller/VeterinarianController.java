@@ -120,7 +120,7 @@ public class VeterinarianController implements ControllerInterface {
 		clinicalHistoryDto.setProcedureDetail(procedureDetail);
 		clinicalHistoryDto.setProcedureName(procedureName);
 		clinicalHistoryDto.setReason(reason);
-		clinicalHistoryDto.setStatus(true);
+		clinicalHistoryDto.setStatus("active");
 		clinicalHistoryDto.setVaccunation(vaccunation);
 
 		System.out.println("se ha creado la historia clinica");
