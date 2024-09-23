@@ -1,73 +1,44 @@
 package app.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.sql.Date;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
+@NoArgsConstructor
+@Getter
+@Setter
+@Table(name = "medicalorder")
 public class Order {
-	private long id;
-	private Pet petId;
-	private User veterinarian;
-	private Person ownerId;
-	private String dose;
-	private String medicine;
-	private Date date;
 
-	public Order() {
-	}
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @ManyToOne
+    @JoinColumn(name="petid")
+    private Pet petId;
+    @ManyToOne
+    @JoinColumn(name="userid")
+    private User veterinarian;
+    @ManyToOne
+    @JoinColumn(name="ownerid")
+    private Person ownerId;
+    @Column(name="doce")
+    private String dose;
+    @Column(name="medicine")
+    private String medicine;
+    @Column(name="datecreated")
+    private Date date;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public Pet getPetId() {
-		return petId;
-	}
-
-	public void setPetId(Pet petId) {
-		this.petId = petId;
-	}
-
-	public User getVeterinarian() {
-		return veterinarian;
-	}
-
-	public void setVeterinarian(User veterinarian) {
-		this.veterinarian = veterinarian;
-	}
-
-	public Person getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(Person ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	public String getDose() {
-		return dose;
-	}
-
-	public void setDose(String dose) {
-		this.dose = dose;
-	}
-
-	public String getMedicine() {
-		return medicine;
-	}
-
-	public void setMedicine(String medicine) {
-		this.medicine = medicine;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
+  
 }

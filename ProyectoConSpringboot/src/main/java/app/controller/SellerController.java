@@ -6,10 +6,14 @@ import app.controller.validator.InvoiceValidator;
 import app.controller.validator.OrderValidator;
 import app.controller.validator.PersonValidator;
 import app.controller.validator.PetValidator;
+import app.dto.InvoiceDetailDto;
 import app.dto.InvoiceDto;
 import app.dto.OrderDto;
 import app.dto.PersonDto;
 import app.dto.PetDto;
+import app.service.interfaces.SellerService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +34,8 @@ public class SellerController implements ControllerInterface {
     private OrderValidator orderValidator;
     @Autowired
     private InvoiceValidator invoiceValidator;
+    @Autowired
+    private SellerService service;
     private static final String MENU = "Ingrese la opcion la accion que desea hacer \n 1. para crear factura. \n 2. para cerrar sesion";
 
     @Override
@@ -70,9 +76,8 @@ public class SellerController implements ControllerInterface {
 
     }
 
-
     private void createInvoice() throws Exception {
-        System.out.println("ingrese la cedula del dueño de la mascota");
+        /*System.out.println("ingrese la cedula del dueño de la mascota");
         long document = personValidator.validDocument(Utils.getReader().nextLine());
         System.out.println("ingrese el id de la mascota");
         long petId = petValidator.validId(Utils.getReader().nextLine());
@@ -96,7 +101,31 @@ public class SellerController implements ControllerInterface {
         invoiceDto.setOrderId(orderDto);
         invoiceDto.setPetId(petDto);
         invoiceDto.setOwnerId(personDto);
-        System.out.println("se creo la factura");
+        System.out.println("se creo la factura");*/
+        System.out.println("ingrese el numero de elmentos");
+        int items = invoiceValidator.validItem(Utils.getReader().nextLine());
+        List<InvoiceDetailDto> invoices = new ArrayList<InvoiceDetailDto>();
+        System.out.println("ingrese el id de la orden");
+        long orderid = orderValidator.validId(Utils.getReader().nextLine());
+        InvoiceDto invoiceDto = new InvoiceDto();
+        OrderDto orderDto = new OrderDto();
+        orderDto.setId(orderid);
+        invoiceDto.setOrderId(orderDto);
+        invoiceDto.setItems(String.valueOf(items));
+        invoiceDto.setDate(new Date(System.currentTimeMillis()));
+        double total =0;
+        for (int i = 0; i < items; i++) {
+            InvoiceDetailDto invoiceDetailDto = new InvoiceDetailDto();
+            invoiceDetailDto.setInvoiceId(invoiceDto);
+            invoiceDetailDto.setItem((i + 1));
+            System.out.println("ingree el monto del itel " + invoiceDto.getItems());
+            invoiceDetailDto.setAmount(invoiceValidator.validAmount(Utils.getReader().nextLine()));
+            total+= invoiceDetailDto.getAmount();
+            invoices.add(invoiceDetailDto);
+        }
+        invoiceDto.setAmount(total);
+        this.service.createInvoice(invoices);
+        
     }
 
 }

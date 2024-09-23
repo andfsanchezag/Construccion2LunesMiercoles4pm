@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package app.model;
 
 import jakarta.persistence.Column;
@@ -8,35 +12,30 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.sql.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ *
+ * @author ESTUDIANTE
+ */
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "invoice")
-public class Invoice {
-
+@Table(name="invoicedetail")
+public class InvoiceDetail {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     @ManyToOne
-    @JoinColumn(name="petid")
-    private Pet petId;
-    @ManyToOne
-    @JoinColumn(name="ownerid")
-    private Person ownerId;
-    @ManyToOne
-    @JoinColumn(name="orderid")
-    private Order orderId;
+    @JoinColumn(name="invoiceid")
+    private Invoice invoiceId;
     @Column(name="items")
-    private String items;
+    private int item;
     @Column(name="amount")
     private double amount;
-    @Column(name="date")
-    private Date date;
+    
 }

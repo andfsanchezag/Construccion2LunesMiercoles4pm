@@ -12,13 +12,16 @@ import app.dao.interfaces.PersonDao;
 import app.dao.interfaces.PetDao;
 import app.dao.interfaces.UserDao;
 import app.dto.ClinicalHistoryDto;
+import app.dto.InvoiceDetailDto;
 import app.dto.OrderDto;
 import app.dto.PersonDto;
 import app.dto.PetDto;
 import app.dto.UserDto;
 import app.service.interfaces.AdminService;
 import app.service.interfaces.LoginService;
+import app.service.interfaces.SellerService;
 import app.service.interfaces.VeterinarianService;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +32,7 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @Getter
 @Setter
-public class VeterinaryService implements LoginService, AdminService, VeterinarianService {
+public class VeterinaryService implements LoginService, AdminService, VeterinarianService, SellerService {
 
     @Autowired
     private UserDao userDao;
@@ -130,6 +133,11 @@ public class VeterinaryService implements LoginService, AdminService, Veterinari
         orderDto.setVeterinarian(clinicalHistoryDto.getVeterinarian());
         orderDao.createOrder(orderDto);
         return orderDto;
+    }
+
+    @Override
+    public void createInvoice(List<InvoiceDetailDto> invoices) throws Exception {
+        OrderDto order = orderDao.findById(invoices.get(0).getId());
     }
 
 }
