@@ -1,9 +1,13 @@
 package app.helpers;
 
+import app.dto.InvoiceDetailDto;
+import app.dto.InvoiceDto;
 import app.dto.OrderDto;
 import app.dto.PersonDto;
 import app.dto.PetDto;
 import app.dto.UserDto;
+import app.model.Invoice;
+import app.model.InvoiceDetail;
 import app.model.Order;
 import app.model.Person;
 import app.model.Pet;
@@ -79,5 +83,64 @@ public abstract class Helper {
         pet.setRace(petDto.getRace());
         pet.setWeigth(petDto.getWeigth());
         return pet;
+    }
+
+    public static Invoice parse(InvoiceDto invoiceDto) {
+        Invoice invoice = new Invoice();
+        invoice.setAmount(invoiceDto.getAmount());
+        invoice.setDate(invoiceDto.getDate());
+        invoice.setId(invoiceDto.getId());
+        invoice.setItems(invoiceDto.getItems());
+        if (invoiceDto.getOrderId() != null) {
+            invoice.setOrderId(parse(invoiceDto.getOrderId()));
+        }
+        if (invoiceDto.getOwnerId()!= null) {
+            invoice.setOwnerId(parse(invoiceDto.getOwnerId()));
+        }
+         if (invoiceDto.getPetId()!= null) {
+            invoice.setPetId(parse(invoiceDto.getPetId()));
+        }
+        return invoice;
+    }
+    
+    public static OrderDto parse(Order order) {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setDate(order.getDate());
+        orderDto.setDose(order.getDose());
+        orderDto.setId(order.getId());
+        orderDto.setMedicine(order.getMedicine());
+        if (orderDto.getOwnerId() != null) {
+            orderDto.setOwnerId(parse(order.getOwnerId()));
+        }
+        if (orderDto.getVeterinarian() != null) {
+            orderDto.setVeterinarian(parse(order.getVeterinarian()));
+        }
+        if (orderDto.getPetId() != null) {
+            orderDto.setPetId(parse(order.getPetId()));
+        }
+        return orderDto;
+    }
+    
+      private static PetDto parse(Pet pet) {
+        PetDto petDto = new PetDto();
+        petDto.setAge(pet.getAge());
+        petDto.setFeatures(pet.getFeatures());
+        petDto.setId(pet.getId());
+        petDto.setName(pet.getName());
+        if (petDto.getOwnerId() != null) {
+            petDto.setOwnerId(parse(pet.getOwnerId()));
+        }
+        petDto.setRace(pet.getRace());
+        petDto.setWeigth(pet.getWeigth());
+        return petDto;
+    }
+
+    public static InvoiceDetail parse(InvoiceDetailDto invoiceDetailDto) {
+        InvoiceDetail invoiceDetail = new InvoiceDetail();
+        invoiceDetail.setAmount(invoiceDetailDto.getAmount());
+        invoiceDetail.setId(invoiceDetailDto.getId());
+        invoiceDetail.setInvoiceId(parse(invoiceDetailDto.getInvoiceId()));
+        invoiceDetail.setItem(invoiceDetailDto.getItem());
+        return invoiceDetail;
     }
 }

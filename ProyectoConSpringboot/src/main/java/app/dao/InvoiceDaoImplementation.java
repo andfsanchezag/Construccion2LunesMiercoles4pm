@@ -4,11 +4,11 @@
  */
 package app.dao;
 
-import app.dao.interfaces.OrderDao;
-import app.dao.repositories.OrderRepository;
-import app.dto.OrderDto;
+import app.dao.interfaces.InvoiceDao;
+import app.dao.repositories.InvoiceRepository;
+import app.dto.InvoiceDto;
 import app.helpers.Helper;
-import app.model.Order;
+import app.model.Invoice;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,24 +19,18 @@ import org.springframework.stereotype.Service;
  *
  * @author ESTUDIANTE
  */
-
 @Service
-@NoArgsConstructor
 @Getter
 @Setter
-public class OrderDaoImplementation implements OrderDao{
+@NoArgsConstructor
+public class InvoiceDaoImplementation implements InvoiceDao{
     @Autowired
-    private OrderRepository orderRepository;
-
+    public  InvoiceRepository invoiceRepository;
     @Override
-    public void createOrder(OrderDto orderDto) throws Exception {
-       
-    }
-
-    @Override
-    public OrderDto findById(OrderDto orderDto) {
-        Order order = orderRepository.findById(orderDto.getId());
-        return Helper.parse(order);
+    public void createInvoice(InvoiceDto invoiceDto) throws Exception {
+        Invoice invoice = Helper.parse(invoiceDto);
+        invoiceRepository.save(invoice);
+        invoiceDto.setId(invoice.getId());
     }
     
 }

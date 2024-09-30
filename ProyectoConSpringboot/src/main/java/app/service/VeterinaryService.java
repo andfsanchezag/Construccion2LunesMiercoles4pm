@@ -7,12 +7,14 @@ import app.dao.PersonDaoImplementation;
 import app.dao.UserDaoImplementation;
 import app.dao.interfaces.ClinicalHistoryDao;
 import app.dao.interfaces.InvoiceDao;
+import app.dao.interfaces.InvoiceDetailDao;
 import app.dao.interfaces.OrderDao;
 import app.dao.interfaces.PersonDao;
 import app.dao.interfaces.PetDao;
 import app.dao.interfaces.UserDao;
 import app.dto.ClinicalHistoryDto;
 import app.dto.InvoiceDetailDto;
+import app.dto.InvoiceDto;
 import app.dto.OrderDto;
 import app.dto.PersonDto;
 import app.dto.PetDto;
@@ -40,8 +42,12 @@ public class VeterinaryService implements LoginService, AdminService, Veterinari
     private PersonDao personDao;
     private PetDao petDao;
     private ClinicalHistoryDao clinicalHistoryDao;
+    @Autowired
     private InvoiceDao invoiceDao;
+    @Autowired
     private OrderDao orderDao;
+     @Autowired
+    private InvoiceDetailDao invoiceDetailDao;
 
     public static UserDto user;
 
@@ -137,7 +143,19 @@ public class VeterinaryService implements LoginService, AdminService, Veterinari
 
     @Override
     public void createInvoice(List<InvoiceDetailDto> invoices) throws Exception {
-        OrderDto order = orderDao.findById(invoices.get(0).getId());
+        OrderDto orderDto = orderDao.findById(invoices.get(0).getInvoiceId().getOrderId());
+        if (orderDto==null){
+            throw new Exception("la orden no existe");
+        }
+        InvoiceDto invoiceDto=invoices.get(0).getInvoiceId();
+        invoiceDto.setOrderId(orderDto);
+        invoiceDto.setOwnerId(orderDto.getOwnerId());
+        invoiceDto.setPetId(orderDto.getPetId());
+        invoiceDao.createInvoice(invoiceDto);
+        for (InvoiceDetailDto invoiceDetailDto : invoices){
+            invoiceDetailDto.setInvoiceId(invoiceDto);
+            invoiceDetailDao.createInvoiceDetail(invoiceDetailDto);
+        }
     }
 
 }
