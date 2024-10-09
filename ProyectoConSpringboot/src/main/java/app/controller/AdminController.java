@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.controller.requests.CreateUserRequest;
 import app.controller.validator.PersonValidator;
 import app.controller.validator.UserValidator;
 import app.dto.PersonDto;
@@ -10,12 +11,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Controller
+@RestController
 public class AdminController implements ControllerInterface {
 
     @Autowired
@@ -28,88 +34,50 @@ public class AdminController implements ControllerInterface {
 
     @Override
     public void session() throws Exception {
-        boolean session = true;
-        while (session) {
-            session = menu();
-        }
 
     }
 
-    private boolean menu() {
+    @PostMapping("/veterinarian")
+    private ResponseEntity createVeterinarian(@RequestBody CreateUserRequest request) throws Exception {
         try {
-            System.out.println("bienvenido " + VeterinaryService.user.getUserName());
-            System.out.print(MENU);
-            String option = Utils.getReader().nextLine();
-            return options(option);
+            String name = request.getName();
+            personValidator.validName(name);
+            long document = personValidator.validDocument(request.getDocument());
+            int age = personValidator.validAge(request.getAge());
+            String userName = request.getUserName();
+            userValidator.validUserName(userName);
+            String password = request.getPassword();
+            userValidator.validPassword(password);
 
+            PersonDto personDto = new PersonDto();
+            personDto.setName(name);
+            personDto.setDocument(document);
+            personDto.setAge(age);
+            UserDto userDto = new UserDto();
+            userDto.setPersonid(personDto);
+            userDto.setUserName(userName);
+            userDto.setPassword(password);
+            userDto.setRole("veterinarian");
+
+            this.service.createVeterinarian(userDto);
+            return new ResponseEntity<>("se ha creado el usuario exitosamente", HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return true;
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    private boolean options(String option) throws Exception {
-        switch (option) {
-            case "1": {
-                this.createVeterinarian();
-                return true;
-            }
-            case "2": {
-                this.createSeller();
-                return true;
-            }
-            case "3": {
-                System.out.println("se ha cerrado sesion");
-                return false;
-            }
-            default: {
-                System.out.println("ingrese una opcion valida");
-                return true;
-            }
-        }
-    }
-
-    private void createVeterinarian() throws Exception {
-        System.out.println("ingrese el nombre del veterinario");
-        String name = Utils.getReader().nextLine();
+    @PostMapping("/seller")
+    private ResponseEntity createSeller(@RequestBody CreateUserRequest request) throws Exception {
+         try {
+        String name = request.getName();
         personValidator.validName(name);
-        System.out.println("ingrese la cedula del veterinario");
-        long document = personValidator.validDocument(Utils.getReader().nextLine());
-        System.out.println("ingrese la edad del veterinario");
-        int age = personValidator.validAge(Utils.getReader().nextLine());
-        System.out.println("ingrese el nombre de usuario del veterinario");
-        String userName = Utils.getReader().nextLine();
+        long document = personValidator.validDocument(request.getDocument());
+        int age = personValidator.validAge(request.getAge());
+        String userName = request.getUserName();
         userValidator.validUserName(userName);
-        System.out.println("ingrese la contraseña del veterinario");
-        String password = Utils.getReader().nextLine();
+        String password = request.getPassword();
         userValidator.validPassword(password);
-        PersonDto personDto = new PersonDto();
-        personDto.setName(name);
-        personDto.setDocument(document);
-        personDto.setAge(age);
-        UserDto userDto = new UserDto();
-        userDto.setPersonid(personDto);
-        userDto.setUserName(userName);
-        userDto.setPassword(password);
-        userDto.setRole("veterinarian");
-        this.service.createVeterinarian(userDto);
-        System.out.println("se ha creado el usuario exitosamente");
-    }
 
-    private void createSeller() throws Exception {
-        System.out.println("ingrese el nombre del vendedor");
-        String name = Utils.getReader().nextLine();
-        personValidator.validName(name);
-        System.out.println("ingrese la cedula del vendedor");
-        long document = personValidator.validDocument(Utils.getReader().nextLine());
-        System.out.println("ingrese la edad del vendedor");
-        int age = personValidator.validAge(Utils.getReader().nextLine());
-        System.out.println("ingrese el nombre de usuario del vendedor");
-        String userName = Utils.getReader().nextLine();
-        userValidator.validUserName(userName);
-        System.out.println("ingrese la contraseña del vendedor");
-        String password = Utils.getReader().nextLine();
-        userValidator.validPassword(password);
         PersonDto personDto = new PersonDto();
         personDto.setName(name);
         personDto.setDocument(document);
@@ -120,7 +88,15 @@ public class AdminController implements ControllerInterface {
         userDto.setPassword(password);
         userDto.setRole("seller");
         this.service.createSeller(userDto);
-        System.out.println("se ha creado el usuario exitosamente");
+        return new ResponseEntity<>("se ha creado el usuario exitosamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/")
+    public String vive() {
+        return "vive";
     }
 
 }
